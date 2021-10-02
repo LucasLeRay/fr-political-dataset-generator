@@ -1,28 +1,33 @@
-from bs4 import BeautifulSoup
 import logging
-import pandas as pd
 import random
-import requests
 import time
+
+from bs4 import BeautifulSoup
+import pandas as pd
+import requests
 import urllib3
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+import config
+from constants import (
+  PARTIES_BASE_URL,
+  PARTIES_LIST_URL,
+  PARTIES_FILE_PATH
+)
 
-BASE_URL = 'http://www.politologue.com'
-LIST_URL = f'{BASE_URL}/classement-interne-parti/'
-RESULT_FILE_NAME = 'parties.csv'
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 def generate_parties():
-  parties = _get_parties(LIST_URL)
+  parties = _get_parties(PARTIES_LIST_URL)
   df = pd.DataFrame(columns=['name', 'party'])
   for name, link in parties.items():
     logging.info(f'Processing {name}')
     time.sleep(random.random())
-    persons = _get_persons(f'{BASE_URL}{link}')
+    persons = _get_persons(f'{PARTIES_BASE_URL}{link}')
     df = df.append(pd.DataFrame({'name': persons, 'party': name}), ignore_index=True)
-  logging.info(f'Printing results in {RESULT_FILE_NAME}')
-  df.to_csv(RESULT_FILE_NAME)
+  logging.info(f'Printing results in {PARTIES_FILE_PATH}')
+  df.set_index('name', inplace=True)
+  df.to_csv(PARTIES_FILE_PATH)
 
 
 def _get_parties(url):
