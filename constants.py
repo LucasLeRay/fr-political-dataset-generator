@@ -11,8 +11,11 @@ DEFAULT_PATH = 'generated'
 
 # Parties result file
 PARTIES_FILE_PATH = f'{DEFAULT_PATH}/parties.csv'
+NAME_COLUMN = 'name'
+PARTY_COLUMN = 'party'
 
 # Speeches result path
 SPEECHES_FOLDER_PATH = f'{DEFAULT_PATH}/speeches'
 
+# Libraries configurations
 LOGGING_FORMAT = '%(levelname)s: %(message)s'
